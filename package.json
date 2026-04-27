@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "cloudinary": "^2.10.0",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "replicate": "^1.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
