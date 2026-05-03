@@ -25,13 +25,35 @@ function App() {
     setResult(null)
 
     try {
+      const userFile = document.querySelector('#userInput').files[0]
+      const garmentFile = document.querySelector('#garmentInput').files[0]
+
+      const userForm = new FormData()
+      userForm.append('file', userFile)
+      const userUpload = await fetch('http://127.0.0.1:8000/api/upload', {
+        method: 'POST',
+        body: userForm
+      })
+      const userData = await userUpload.json()
+
+      const garmentForm = new FormData()
+      garmentForm.append('file', garmentFile)
+      const garmentUpload = await fetch('http://127.0.0.1:8000/api/upload', {
+        method: 'POST',
+        body: garmentForm
+      })
+      const garmentData = await garmentUpload.json()
+
       const response = await fetch('http://127.0.0.1:8000/api/tryon', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userImage, garmentImage })
+        body: JSON.stringify({
+          userImage: userData.url,
+          garmentImage: garmentData.url
+        })
       })
       const data = await response.json()
-      setResult(data.output)
+      setResult(data.result_url)
     } catch (err) {
       alert('Erreur — réessaie !')
     }
@@ -71,7 +93,6 @@ function App() {
         width: '100%',
         maxWidth: '800px'
       }}>
-        {/* Upload photo client */}
         <div style={{
           background: 'white',
           border: '0.5px solid rgba(0,0,0,0.15)',
@@ -97,11 +118,10 @@ function App() {
             cursor: 'pointer', textAlign: 'center'
           }}>
             Uploader ma photo
-            <input type="file" accept="image/*" onChange={handleUserImage} style={{ display: 'none' }} />
+            <input id="userInput" type="file" accept="image/*" onChange={handleUserImage} style={{ display: 'none' }} />
           </label>
         </div>
 
-        {/* Upload vêtement */}
         <div style={{
           background: 'white',
           border: '0.5px solid rgba(0,0,0,0.15)',
@@ -127,12 +147,11 @@ function App() {
             cursor: 'pointer', textAlign: 'center'
           }}>
             Uploader le vêtement
-            <input type="file" accept="image/*" onChange={handleGarmentImage} style={{ display: 'none' }} />
+            <input id="garmentInput" type="file" accept="image/*" onChange={handleGarmentImage} style={{ display: 'none' }} />
           </label>
         </div>
       </div>
 
-      {/* Bouton essayer */}
       <button
         onClick={handleTryOn}
         disabled={loading}
@@ -147,7 +166,6 @@ function App() {
         {loading ? 'Essayage en cours...' : 'Essayer ce vêtement →'}
       </button>
 
-      {/* Résultat */}
       {result && (
         <div style={{
           background: 'white',
@@ -164,4 +182,3 @@ function App() {
 }
 
 export default App
-
