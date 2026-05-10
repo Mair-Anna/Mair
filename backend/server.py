@@ -41,11 +41,11 @@ async def upload_image(file: UploadFile = File(...)):
 @app.post("/api/tryon")
 async def tryon(request: TryOnRequest):
     output = replicate.run(
-        "cuuupid/idm-vton:906425dbca90663ff5427624839572cc56ea7d380343d13e2a4c4b09d3f0c30f",
+        "subhash25rawat/flux-vton:a02643ce418c0e12bad371c4adbfaec0dd1cb34b034ef37650ef205f92ad6199",
         input={
-            "human_img": request.userImage,
-            "garm_img": request.garmentImage,
-            "garment_des": "a garment"
+            "part": "dresses",
+            "image": request.userImage,
+            "garment": request.garmentImage
         }
     )
     return {"result_url": str(output)}
